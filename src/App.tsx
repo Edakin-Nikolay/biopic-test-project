@@ -26,7 +26,7 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                Тестовое задание Bioptic Medical
+                Тестовое задание Biopic Medical
             </header>
             {(globalLoading > 0) && <LinearProgress color="primary" />}
             <div className="Data-grid">
