@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import './App.css';
+import GettingData from "./components/GettingData";
+import {LinearProgress} from "@material-ui/core";
+import * as api from './api';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [globalLoading, setGlobalLoading] = useState(0);
+
+    function incGlobal () {
+        setGlobalLoading(prevState => prevState + 1);
+    }
+
+    function decGlobal () {
+        setGlobalLoading(prevState => prevState - 1);
+    }
+
+    function getPage (url: string,
+                      setLoading: Dispatch<SetStateAction<boolean>>,
+                      setSuccess: Dispatch<SetStateAction<boolean>>,
+                      setFailed: Dispatch<SetStateAction<boolean>>) {
+        incGlobal();
+        api.getPageTimeOut(url, setLoading, setSuccess, setFailed, decGlobal);
+    }
+
+    return (
+        <div className="App">
+            <header className="App-header">
+                Тестовое задание Bioptic Medical
+            </header>
+            {(globalLoading > 0) && <LinearProgress color="primary" />}
+            <div className="Data-grid">
+                {[...Array(5).keys()].map((key: number) =>
+                    <GettingData key={key} getPage={getPage} label={`Получение данных по URL №${key+1}:`}/>)}
+            </div>
+        </div>
+    );
 }
 
 export default App;
